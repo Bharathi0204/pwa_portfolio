@@ -5,6 +5,9 @@ import { InstallPromptModal } from './components/InstallPrompt';
 import { OfflineBadge } from './components/OfflineBadge';
 import { ArchitectureModal } from './components/ArchitectureModal';
 import { AiAssistant } from './components/AiAssistant';
+import { ThreeDimensionalCanvas } from './components/ThreeDimensionalCanvas';
+import { MobileBottomNav } from './components/MobileBottomNav';
+import { FloatingActionHub } from './components/FloatingActionHub';
 import { HomePage } from './pages/HomePage';
 import { ExperiencePage } from './pages/ExperiencePage';
 import { ProjectsPage } from './pages/ProjectsPage';
@@ -12,7 +15,6 @@ import { SkillsDsaPage } from './pages/SkillsDsaPage';
 import { AchievementsPage } from './pages/AchievementsPage';
 import { ContactPage } from './pages/ContactPage';
 import { Project } from './data/portfolioData';
-import { Bot, Sparkles, Download } from 'lucide-react';
 
 export const App: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>('home');
@@ -22,9 +24,8 @@ export const App: React.FC = () => {
   const [selectedCaseStudy, setSelectedCaseStudy] = useState<Project | null>(null);
   const [aiAssistantOpen, setAiAssistantOpen] = useState<boolean>(false);
 
-  // Register PWA Install listener
+  // Register PWA Install listener & standalone detection
   useEffect(() => {
-    // Check if launched in standalone mode (already installed)
     if (window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone) {
       setIsInstalled(true);
     }
@@ -49,12 +50,12 @@ export const App: React.FC = () => {
     };
   }, []);
 
-  // Update active section on scroll
+  // Update active section on scroll with optimized observer/listener
   useEffect(() => {
     const sections = ['home', 'experience', 'projects', 'skills', 'achievements', 'contact'];
     
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 200;
+      const scrollPosition = window.scrollY + 220;
       for (const sectionId of sections) {
         const el = document.getElementById(sectionId);
         if (el) {
@@ -88,13 +89,18 @@ export const App: React.FC = () => {
     setActiveSection(sectionId);
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      const yOffset = -70;
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
     }
   };
 
   return (
-    <div className="min-h-screen bg-cyber-grid bg-[#0b0f19] text-slate-100 relative">
+    <div className="min-h-screen bg-cyber-grid bg-[#0b0f19] text-slate-100 relative selection:bg-cyan-500 selection:text-white">
       
+      {/* 3D Particle Mesh Background */}
+      <ThreeDimensionalCanvas />
+
       {/* Offline Status Listener */}
       <OfflineBadge />
 
@@ -109,7 +115,7 @@ export const App: React.FC = () => {
       />
 
       {/* Main Content Sections */}
-      <main>
+      <main className="relative z-10">
         <HomePage
           onOpenAssistant={() => setAiAssistantOpen(true)}
           onNavigateTo={handleNavigateTo}
@@ -133,20 +139,17 @@ export const App: React.FC = () => {
       {/* Footer */}
       <Footer />
 
-      {/* Floating Action Button: Grounded AI Assistant */}
-      <button
-        onClick={() => setAiAssistantOpen(true)}
-        className="fixed bottom-6 right-6 z-40 p-3.5 rounded-2xl bg-gradient-to-br from-violet-600 via-sky-600 to-cyan-500 text-white shadow-2xl shadow-violet-500/40 hover:scale-110 active:scale-95 transition-all duration-200 group flex items-center gap-2 border border-white/20"
-        title="Ask Portfolio AI Assistant"
-      >
-        <div className="relative">
-          <Bot className="w-6 h-6 text-white group-hover:rotate-12 transition-transform" />
-          <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-400 rounded-full ring-2 ring-slate-950 animate-pulse" />
-        </div>
-        <span className="hidden sm:inline text-xs font-bold font-mono tracking-wide pr-1">
-          Ask Portfolio AI
-        </span>
-      </button>
+      {/* Floating Action Hub: Coordinated AI Assistant & Back to Top (Zero Overlap) */}
+      <FloatingActionHub
+        onOpenAssistant={() => setAiAssistantOpen(true)}
+      />
+
+      {/* Mobile App Bottom Navigation Dock */}
+      <MobileBottomNav
+        activeSection={activeSection}
+        onNavigateTo={handleNavigateTo}
+        onOpenAssistant={() => setAiAssistantOpen(true)}
+      />
 
       {/* PWA Installation Modal */}
       <InstallPromptModal

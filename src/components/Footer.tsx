@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mail, Heart, ShieldCheck, ArrowUp, Cpu, Terminal } from 'lucide-react';
+import { Mail, ShieldCheck, ArrowUp, Terminal, Cpu } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from './SocialIcons';
 import { PERSONAL_INFO } from '../data/portfolioData';
 
@@ -9,16 +9,16 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="border-t border-white/10 bg-slate-950/95 text-slate-400 py-10 sm:py-12 relative overflow-hidden">
+    <footer className="border-t border-white/10 bg-slate-950/95 text-slate-400 pt-10 pb-28 md:pb-12 relative overflow-hidden">
       
       {/* Background glow */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-80 sm:w-96 h-28 sm:h-32 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 mb-8 sm:mb-10 pb-8 sm:pb-10 border-b border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 mb-8 pb-8 border-b border-white/10">
           
-          {/* Brand Col */}
+          {/* Brand Column */}
           <div className="md:col-span-5 space-y-3">
             <div className="flex items-center gap-2.5 sm:gap-3">
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-cyan-500 to-emerald-500 p-0.5 shadow-md shadow-cyan-500/20 shrink-0">
@@ -67,7 +67,7 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Social & Contact Col */}
+          {/* Social & Contact Column */}
           <div className="md:col-span-4 space-y-3">
             <div className="text-[11px] sm:text-xs font-mono font-bold text-white uppercase tracking-wider mb-2 sm:mb-3">
               Connect & Verify

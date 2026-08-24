@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Bot, Send, X, Sparkles, User, Trash2, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Bot, Send, X, Sparkles, User, Trash2, ShieldCheck } from 'lucide-react';
 import { queryAssistant } from '../data/aiKnowledge';
 
 interface Message {
@@ -118,22 +118,25 @@ export const AiAssistant: React.FC<AiAssistantProps> = ({ isOpen, onClose }) => 
   };
 
   return (
-    <div className="modal-backdrop p-2.5 sm:p-4" onClick={onClose}>
+    <div className="modal-backdrop" onClick={onClose}>
       <div 
-        className="relative w-full max-w-2xl h-[92vh] sm:h-[85vh] bg-slate-900 border border-violet-500/40 rounded-2xl shadow-2xl shadow-violet-500/20 text-slate-100 overflow-hidden flex flex-col"
+        className="bottom-sheet-content relative w-full max-w-2xl h-[92vh] sm:h-[85vh] bg-slate-900 border border-violet-500/40 rounded-t-2xl sm:rounded-2xl shadow-2xl shadow-violet-500/20 text-slate-100 overflow-hidden flex flex-col pb-[env(safe-area-inset-bottom)]"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Mobile Pull Handle */}
+        <div className="w-12 h-1.5 bg-white/20 rounded-full mx-auto mt-2 sm:hidden shrink-0" />
+
         {/* Header */}
-        <div className="p-3.5 sm:p-5 border-b border-white/10 bg-slate-950/80 flex items-center justify-between gap-2">
+        <div className="p-3 sm:p-5 border-b border-white/10 bg-slate-950/80 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-violet-600 to-cyan-500 p-0.5 shadow-lg shadow-violet-500/30 shrink-0">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-violet-600 to-cyan-500 p-0.5 shadow-lg shadow-violet-500/30 shrink-0">
               <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-                <Bot className="w-5 h-5 text-violet-300" />
+                <Bot className="w-4 h-4 sm:w-5 sm:h-5 text-violet-300" />
               </div>
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-1.5 sm:gap-2">
-                <h3 className="font-heading font-bold text-sm sm:text-base text-white truncate">
+                <h3 className="font-heading font-bold text-xs sm:text-base text-white truncate">
                   Portfolio AI
                 </h3>
                 <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[9px] sm:text-[10px] font-mono font-bold flex items-center gap-1 shrink-0">
@@ -141,7 +144,7 @@ export const AiAssistant: React.FC<AiAssistantProps> = ({ isOpen, onClose }) => 
                   Grounded
                 </span>
               </div>
-              <p className="text-[10px] sm:text-[11px] text-slate-400 font-mono truncate">
+              <p className="text-[9px] sm:text-[11px] text-slate-400 font-mono truncate">
                 Verified blueprint knowledge base
               </p>
             </div>
@@ -150,14 +153,14 @@ export const AiAssistant: React.FC<AiAssistantProps> = ({ isOpen, onClose }) => 
           <div className="flex items-center gap-1 shrink-0">
             <button
               onClick={handleClear}
-              className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+              className="p-1.5 sm:p-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
               title="Clear Conversation"
             >
               <Trash2 className="w-4 h-4" />
             </button>
             <button
               onClick={onClose}
-              className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+              className="p-1.5 sm:p-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
               title="Close Assistant"
             >
               <X className="w-5 h-5" />
@@ -166,7 +169,7 @@ export const AiAssistant: React.FC<AiAssistantProps> = ({ isOpen, onClose }) => 
         </div>
 
         {/* Message Stream */}
-        <div className="flex-1 p-3.5 sm:p-6 overflow-y-auto space-y-3.5 custom-scrollbar">
+        <div className="flex-1 p-3 sm:p-6 overflow-y-auto space-y-3 custom-scrollbar">
           {messages.map((msg) => {
             const isBot = msg.sender === 'assistant';
             return (
@@ -175,20 +178,20 @@ export const AiAssistant: React.FC<AiAssistantProps> = ({ isOpen, onClose }) => 
                 className={`flex gap-2 sm:gap-3 ${isBot ? 'items-start' : 'items-start flex-row-reverse'}`}
               >
                 {/* Avatar */}
-                <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg shrink-0 flex items-center justify-center ${
+                <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-lg shrink-0 flex items-center justify-center ${
                   isBot ? 'bg-violet-600/20 text-violet-300 border border-violet-500/30' : 'bg-cyan-600/20 text-cyan-300 border border-cyan-500/30'
                 }`}>
                   {isBot ? <Bot className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <User className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
                 </div>
 
                 {/* Bubble */}
-                <div className={`max-w-[90%] sm:max-w-[85%] rounded-2xl p-3 sm:p-4 text-xs sm:text-sm leading-relaxed ${
+                <div className={`max-w-[90%] sm:max-w-[85%] rounded-2xl p-2.5 sm:p-4 text-xs sm:text-sm leading-relaxed ${
                   isBot 
                     ? 'bg-slate-950/80 border border-white/10 text-slate-200 shadow-md' 
                     : 'bg-gradient-to-r from-cyan-600 to-sky-600 text-white font-medium shadow-md shadow-cyan-600/20'
                 }`}>
                   {isBot ? renderFormattedText(msg.text) : msg.text}
-                  <div className={`text-[9px] sm:text-[10px] mt-1.5 font-mono ${isBot ? 'text-slate-500' : 'text-cyan-200'} text-right`}>
+                  <div className={`text-[8px] sm:text-[10px] mt-1 font-mono ${isBot ? 'text-slate-500' : 'text-cyan-200'} text-right`}>
                     {msg.timestamp}
                   </div>
                 </div>
@@ -197,11 +200,11 @@ export const AiAssistant: React.FC<AiAssistantProps> = ({ isOpen, onClose }) => 
           })}
 
           {isTyping && (
-            <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-violet-600/20 text-violet-300 border border-violet-500/30 flex items-center justify-center shrink-0">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-violet-600/20 text-violet-300 border border-violet-500/30 flex items-center justify-center shrink-0">
                 <Bot className="w-3.5 h-3.5 animate-spin" />
               </div>
-              <div className="p-2.5 sm:p-3 rounded-xl bg-slate-950/80 border border-white/10 text-[11px] sm:text-xs text-slate-400 flex items-center gap-1.5 font-mono">
+              <div className="p-2 sm:p-3 rounded-xl bg-slate-950/80 border border-white/10 text-[10px] sm:text-xs text-slate-400 flex items-center gap-1.5 font-mono">
                 <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-bounce" />
                 <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce [animation-delay:0.2s]" />
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce [animation-delay:0.4s]" />
@@ -215,8 +218,8 @@ export const AiAssistant: React.FC<AiAssistantProps> = ({ isOpen, onClose }) => 
 
         {/* Suggested Quick Question Chips */}
         {suggestedChips.length > 0 && (
-          <div className="px-3 py-2 bg-slate-950/60 border-t border-white/5 overflow-x-auto flex items-center gap-1.5 no-scrollbar">
-            <span className="text-[10px] sm:text-[11px] font-mono text-slate-400 shrink-0 flex items-center gap-1">
+          <div className="px-3 py-1.5 bg-slate-950/60 border-t border-white/5 overflow-x-auto flex items-center gap-1.5 no-scrollbar">
+            <span className="text-[9px] sm:text-[11px] font-mono text-slate-400 shrink-0 flex items-center gap-1">
               <Sparkles className="w-3 h-3 text-cyan-400 shrink-0" />
               Suggested:
             </span>
@@ -224,7 +227,7 @@ export const AiAssistant: React.FC<AiAssistantProps> = ({ isOpen, onClose }) => 
               <button
                 key={idx}
                 onClick={() => handleSend(chip)}
-                className="whitespace-nowrap px-2.5 py-1 rounded-full bg-slate-900 hover:bg-violet-950/60 border border-white/10 hover:border-violet-400/50 text-[10px] sm:text-[11px] text-slate-300 hover:text-cyan-300 transition-all shrink-0"
+                className="whitespace-nowrap px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-slate-900 hover:bg-violet-950/60 border border-white/10 hover:border-violet-400/50 text-[9px] sm:text-[11px] text-slate-300 hover:text-cyan-300 transition-all shrink-0"
               >
                 {chip}
               </button>
@@ -233,19 +236,19 @@ export const AiAssistant: React.FC<AiAssistantProps> = ({ isOpen, onClose }) => 
         )}
 
         {/* Input Bar */}
-        <div className="p-3 sm:p-4 border-t border-white/10 bg-slate-950 flex items-center gap-2">
+        <div className="p-2.5 sm:p-4 border-t border-white/10 bg-slate-950 flex items-center gap-2">
           <input
             type="text"
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
             placeholder="Ask about projects, internships, algorithms, skills..."
-            className="flex-1 bg-slate-900 border border-white/10 focus:border-cyan-400 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none transition-colors"
+            className="flex-1 bg-slate-900 border border-white/10 focus:border-cyan-400 rounded-xl px-3 py-2 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none transition-colors"
           />
           <button
             onClick={() => handleSend()}
             disabled={!inputText.trim()}
-            className="p-2.5 sm:p-3 rounded-xl bg-gradient-to-r from-cyan-500 to-sky-500 text-slate-950 font-bold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-md shadow-cyan-500/20 shrink-0"
+            className="p-2 sm:p-3 rounded-xl bg-gradient-to-r from-cyan-500 to-sky-500 text-slate-950 font-bold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-md shadow-cyan-500/20 shrink-0"
           >
             <Send className="w-4 h-4" />
           </button>
