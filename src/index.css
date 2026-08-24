@@ -27,6 +27,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 4.5rem;
   color-scheme: dark;
   -webkit-text-size-adjust: 100%;
 }
@@ -39,6 +40,11 @@ body {
   line-height: 1.6;
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   padding-bottom: var(--safe-bottom);
+  -webkit-overflow-scrolling: touch;
+}
+
+section {
+  scroll-margin-top: 4.5rem;
 }
 
 /* Custom Scrollbar */
@@ -84,21 +90,11 @@ body {
 
 /* 3D Perspective & Depth System */
 .perspective-container {
-  perspective: 1200px;
+  perspective: 1000px;
 }
 
 .preserve-3d {
   transform-style: preserve-3d;
-}
-
-/* Lightweight 3D Tilt Card */
-.tilt-card {
-  position: relative;
-  transition: transform 0.2s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.2s ease, border-color 0.2s ease;
-}
-
-.tilt-card:hover {
-  box-shadow: 0 16px 32px -10px rgba(2, 132, 199, 0.2);
 }
 
 /* Glassmorphism Cards - Optimized for 60fps / 120fps scrolling */
