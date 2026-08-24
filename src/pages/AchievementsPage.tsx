@@ -3,6 +3,7 @@ import { Trophy, Award, GraduationCap, Sparkles, Star } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { ACHIEVEMENTS, PERSONAL_INFO } from '../data/portfolioData';
 import { Tilt3DCard } from '../components/Tilt3DCard';
+import { HolographicFoilCard } from '../components/HolographicFoilCard';
 
 export const AchievementsPage: React.FC = () => {
   const triggerConfetti = () => {
@@ -36,25 +37,25 @@ export const AchievementsPage: React.FC = () => {
           </p>
         </div>
 
-        {/* Grand Championship Card: SRM Project Day 1st Prize with 3D Tilt */}
-        <Tilt3DCard maxTilt={6} className="w-full mb-8 sm:mb-10">
+        {/* Grand Championship Card: SRM Project Day 1st Prize with Real Holographic Gold Foil */}
+        <HolographicFoilCard foilType="gold" maxTilt={7} className="w-full mb-8 sm:mb-10">
           <div 
             onClick={triggerConfetti}
-            className="glass-panel p-4 sm:p-8 border-amber-500/40 bg-gradient-to-r from-slate-950 via-slate-900 to-amber-950/30 shadow-2xl shadow-amber-500/10 cursor-pointer group relative overflow-hidden"
+            className="glass-panel p-4 sm:p-8 border-amber-500/50 bg-gradient-to-r from-slate-950 via-slate-900 to-amber-950/40 shadow-2xl shadow-amber-500/15 cursor-pointer group relative overflow-hidden"
           >
             {/* Confetti Trigger Badge */}
-            <div className="flex sm:absolute sm:top-4 sm:right-4 mb-3 sm:mb-0 w-fit px-2.5 sm:px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] sm:text-[11px] font-mono font-bold items-center gap-1.5 animate-pulse">
-              <Sparkles className="w-3.5 h-3.5 shrink-0" />
+            <div className="flex sm:absolute sm:top-4 sm:right-4 mb-3 sm:mb-0 w-fit px-2.5 sm:px-3 py-1 rounded-full bg-amber-500/25 text-amber-300 border border-amber-500/50 text-[10px] sm:text-[11px] font-mono font-bold items-center gap-1.5 animate-pulse shadow-md">
+              <Sparkles className="w-3.5 h-3.5 shrink-0 text-amber-300" />
               <span>Tap to Celebrate!</span>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-center">
               <div className="lg:col-span-8 space-y-2.5 sm:space-y-3">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="px-2.5 py-0.5 rounded-full bg-amber-500 text-slate-950 text-[10px] sm:text-[11px] font-black uppercase tracking-wider font-mono shrink-0">
+                  <span className="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-950 text-[10px] sm:text-[11px] font-black uppercase tracking-wider font-mono shrink-0 shadow-md">
                     1st Place Winner
                   </span>
-                  <span className="text-xs text-amber-300 font-mono">SRM Project Day 2026</span>
+                  <span className="text-xs text-amber-300 font-mono font-semibold">SRM Project Day 2026</span>
                 </div>
 
                 <h3 className="font-heading font-black text-lg sm:text-2xl lg:text-3xl text-white group-hover:text-amber-300 transition-colors">
@@ -67,17 +68,17 @@ export const AchievementsPage: React.FC = () => {
               </div>
 
               <div className="lg:col-span-4 flex items-center justify-center lg:justify-end pt-1 lg:pt-0">
-                <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-600 p-0.5 shadow-2xl shadow-amber-500/30 flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
+                <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-2xl bg-gradient-to-br from-amber-300 via-yellow-500 to-orange-600 p-0.5 shadow-2xl shadow-amber-500/40 flex items-center justify-center group-hover:scale-110 transition-transform shrink-0">
                   <div className="w-full h-full bg-slate-950 rounded-[14px] flex flex-col items-center justify-center text-center p-2">
                     <Trophy className="w-6 h-6 sm:w-8 sm:h-8 text-amber-400 mb-0.5 sm:mb-1 shrink-0 animate-bounce" />
                     <span className="font-heading font-black text-[9px] sm:text-xs text-white">1ST PRIZE</span>
-                    <span className="text-[9px] sm:text-[10px] text-amber-400 font-mono">₹50,000</span>
+                    <span className="text-[9px] sm:text-[10px] text-amber-400 font-mono font-bold">₹50,000</span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </Tilt3DCard>
+        </HolographicFoilCard>
 
         {/* Education & Academic Honors Grid with 3D Tilt */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-10">

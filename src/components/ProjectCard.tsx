@@ -1,7 +1,7 @@
 import React from 'react';
 import { Trophy, ArrowUpRight, Cpu, Layers } from 'lucide-react';
 import { Project } from '../data/portfolioData';
-import { Tilt3DCard } from './Tilt3DCard';
+import { HolographicFoilCard } from './HolographicFoilCard';
 
 interface ProjectCardProps {
   project: Project;
@@ -9,8 +9,14 @@ interface ProjectCardProps {
 }
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onOpenCaseStudy }) => {
+  const isAward = !!project.award;
+
   return (
-    <Tilt3DCard maxTilt={7} className="w-full h-full">
+    <HolographicFoilCard 
+      foilType={isAward ? 'gold' : 'cyber'} 
+      maxTilt={7} 
+      className="w-full h-full"
+    >
       <div className="glass-panel p-4 sm:p-6 flex flex-col justify-between group relative overflow-hidden h-full border-white/10 hover:border-cyan-500/50">
         
         {/* Glow highlight on hover */}
@@ -88,6 +94,6 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onOpenCaseStu
         </div>
 
       </div>
-    </Tilt3DCard>
+    </HolographicFoilCard>
   );
 };

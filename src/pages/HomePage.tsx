@@ -3,20 +3,15 @@ import {
   ArrowRight, 
   Bot, 
   Sparkles, 
-  Terminal, 
   Trophy, 
   Download, 
-  Code2,
-  Cpu,
-  Layers,
-  CheckCircle2,
-  ShieldCheck,
-  Zap,
-  Copy,
-  Check
+  Terminal as TerminalIcon,
+  Cuboid as CubeIcon
 } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from '../components/SocialIcons';
 import { Tilt3DCard } from '../components/Tilt3DCard';
+import { Interactive3DHeroTalisman } from '../components/Interactive3DHeroTalisman';
+import { CyberTerminalHUD } from '../components/CyberTerminalHUD';
 import { PERSONAL_INFO } from '../data/portfolioData';
 
 interface HomePageProps {
@@ -32,14 +27,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   onInstallClick,
   isInstalled
 }) => {
-  const [terminalTab, setTerminalTab] = useState<'profile' | 'stack' | 'status'>('profile');
-  const [copiedCmd, setCopiedCmd] = useState(false);
-
-  const handleCopyCmd = () => {
-    navigator.clipboard.writeText('neofetch --profile bharathi');
-    setCopiedCmd(true);
-    setTimeout(() => setCopiedCmd(false), 2000);
-  };
+  const [activeHeroView, setActiveHeroView] = useState<'talisman' | 'terminal'>('talisman');
 
   return (
     <section id="home" className="relative pt-20 sm:pt-32 pb-10 sm:pb-20 overflow-hidden">
@@ -141,139 +129,48 @@ export const HomePage: React.FC<HomePageProps> = ({
 
           </div>
 
-          {/* Right Column: 3D Cybernetic Live Terminal Card */}
-          <div className="lg:col-span-5">
-            <Tilt3DCard maxTilt={8} className="w-full">
-              <div className="terminal-window shadow-2xl shadow-cyan-500/15 border border-cyan-500/40 bg-[#090d16]">
-                
-                {/* Terminal Title Bar */}
-                <div className="terminal-header flex items-center justify-between">
-                  <div className="terminal-dots">
-                    <div className="dot dot-red" />
-                    <div className="dot dot-yellow" />
-                    <div className="dot dot-green" />
-                  </div>
-                  <div className="text-[10px] sm:text-[11px] text-slate-400 font-mono flex items-center gap-1.5 truncate px-1">
-                    <Terminal className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                    <span className="truncate">bharathi@dev-env: ~</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    <span className="text-[9px] text-emerald-400 font-mono font-bold px-1.5 py-0.5 rounded bg-emerald-950/60 border border-emerald-500/30">
-                      ONLINE
-                    </span>
-                  </div>
-                </div>
+          {/* Right Column: 3D Interactive Talisman & Cyber Terminal Switcher */}
+          <div className="lg:col-span-5 space-y-3">
+            
+            {/* View Mode Toggle Strip */}
+            <div className="flex items-center justify-between p-1 rounded-xl bg-slate-950/80 border border-white/10 text-xs">
+              <button
+                onClick={() => setActiveHeroView('talisman')}
+                className={`flex-1 py-1.5 px-3 rounded-lg font-bold flex items-center justify-center gap-1.5 transition-all ${
+                  activeHeroView === 'talisman'
+                    ? 'bg-gradient-to-r from-cyan-500 to-sky-500 text-slate-950 shadow-md shadow-cyan-500/20'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <CubeIcon className="w-3.5 h-3.5 shrink-0" />
+                <span>3D Physics Talismans</span>
+              </button>
 
-                {/* Mobile Terminal Tab Switcher */}
-                <div className="flex sm:hidden border-b border-white/10 bg-slate-950/90 text-[10px] font-mono">
-                  <button
-                    onClick={() => setTerminalTab('profile')}
-                    className={`flex-1 py-1.5 text-center font-bold transition-colors ${
-                      terminalTab === 'profile' ? 'text-cyan-300 border-b border-cyan-400 bg-cyan-950/40' : 'text-slate-400'
-                    }`}
-                  >
-                    Profile
-                  </button>
-                  <button
-                    onClick={() => setTerminalTab('stack')}
-                    className={`flex-1 py-1.5 text-center font-bold transition-colors ${
-                      terminalTab === 'stack' ? 'text-cyan-300 border-b border-cyan-400 bg-cyan-950/40' : 'text-slate-400'
-                    }`}
-                  >
-                    Stack Specs
-                  </button>
-                  <button
-                    onClick={() => setTerminalTab('status')}
-                    className={`flex-1 py-1.5 text-center font-bold transition-colors ${
-                      terminalTab === 'status' ? 'text-cyan-300 border-b border-cyan-400 bg-cyan-950/40' : 'text-slate-400'
-                    }`}
-                  >
-                    PWA Status
-                  </button>
-                </div>
+              <button
+                onClick={() => setActiveHeroView('terminal')}
+                className={`flex-1 py-1.5 px-3 rounded-lg font-bold flex items-center justify-center gap-1.5 transition-all ${
+                  activeHeroView === 'terminal'
+                    ? 'bg-gradient-to-r from-violet-600 to-sky-600 text-white shadow-md shadow-violet-600/20'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <TerminalIcon className="w-3.5 h-3.5 shrink-0" />
+                <span>Live Dev Terminal</span>
+              </button>
+            </div>
 
-                {/* Terminal Body Content */}
-                <div className="p-3.5 sm:p-5 text-xs font-mono space-y-2.5 bg-[#080c14]">
-                  <div className="flex items-center justify-between gap-1 text-[11px] sm:text-xs">
-                    <div className="truncate">
-                      <span className="text-cyan-400">root@srm-ist:~$</span>{' '}
-                      <span className="text-white font-semibold">neofetch --profile bharathi</span>
-                    </div>
-                    <button
-                      onClick={handleCopyCmd}
-                      className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors shrink-0"
-                      title="Copy Command"
-                    >
-                      {copiedCmd ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                    </button>
-                  </div>
-
-                  {/* Responsive Tabbed / Desktop View */}
-                  <div className="p-2.5 sm:p-3 rounded-lg bg-slate-950/85 border border-white/10 space-y-1.5 text-[10px] sm:text-[11px]">
-                    
-                    {/* Tab: Profile Overview */}
-                    <div className={`${terminalTab === 'profile' ? 'block' : 'hidden sm:block'} space-y-1.5`}>
-                      <div className="flex justify-between items-center gap-1 border-b border-white/5 pb-1">
-                        <span className="text-slate-400">Profile:</span>
-                        <span className="text-cyan-300 font-bold">Bharathi E (MCA @ SRM IST)</span>
-                      </div>
-                      <div className="flex justify-between items-center gap-1">
-                        <span className="text-slate-400">Current Role:</span>
-                        <span className="text-slate-200">Full Stack Intern @ Savyasasy</span>
-                      </div>
-                      <div className="flex justify-between items-center gap-1">
-                        <span className="text-slate-400">Primary Core:</span>
-                        <span className="text-emerald-400 font-bold">Python (Expert)</span>
-                      </div>
-                    </div>
-
-                    {/* Tab: Stack Specs */}
-                    <div className={`${terminalTab === 'stack' ? 'block' : 'hidden sm:block'} space-y-1.5`}>
-                      <div className="flex justify-between items-center gap-1">
-                        <span className="text-slate-400">Backend API:</span>
-                        <span className="text-slate-200">FastAPI, Django, Express</span>
-                      </div>
-                      <div className="flex justify-between items-center gap-1">
-                        <span className="text-slate-400">Frontend UI:</span>
-                        <span className="text-slate-200">React, Angular, TypeScript</span>
-                      </div>
-                      <div className="flex justify-between items-center gap-1">
-                        <span className="text-slate-400">AI / Voice:</span>
-                        <span className="text-violet-300 font-semibold">OpenAI, Whisper STT, ML</span>
-                      </div>
-                      <div className="flex justify-between items-center gap-1">
-                        <span className="text-slate-400">IoT Hardware:</span>
-                        <span className="text-amber-300 font-semibold">ESP32 + 5 Sensor Rig</span>
-                      </div>
-                    </div>
-
-                    {/* Tab: Status & DSA */}
-                    <div className={`${terminalTab === 'status' ? 'block' : 'hidden sm:block'} space-y-1.5`}>
-                      <div className="flex justify-between items-center gap-1">
-                        <span className="text-slate-400">DSA Milestone:</span>
-                        <span className="text-cyan-400 font-bold">100 Solved (88.6% Acc)</span>
-                      </div>
-                      <div className="flex justify-between items-center gap-1">
-                        <span className="text-slate-400">Service Worker:</span>
-                        <span className="text-emerald-400 font-bold">ACTIVE (Offline Ready)</span>
-                      </div>
-                    </div>
-
-                  </div>
-
-                  <div className="pt-1">
-                    <button
-                      onClick={onOpenAssistant}
-                      className="w-full py-2.5 rounded-xl bg-violet-600/20 hover:bg-violet-600/30 border border-violet-500/40 text-violet-300 text-[11px] font-bold flex items-center justify-center gap-1.5 transition-all shadow-sm group"
-                    >
-                      <Bot className="w-4 h-4 text-violet-400 shrink-0 group-hover:scale-110 transition-transform" />
-                      <span>Launch Grounded Assistant Terminal</span>
-                    </button>
-                  </div>
-                </div>
-
+            {/* View A: 3D Physical Spring Talisman Canvas */}
+            {activeHeroView === 'talisman' ? (
+              <div className="animate-fadeIn">
+                <Interactive3DHeroTalisman />
               </div>
-            </Tilt3DCard>
+            ) : (
+              /* View B: 3D Live Cybernetic Terminal with Web Audio */
+              <div className="animate-fadeIn">
+                <CyberTerminalHUD onOpenAssistant={onOpenAssistant} />
+              </div>
+            )}
+
           </div>
 
         </div>

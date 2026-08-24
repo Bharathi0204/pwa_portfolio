@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FolderGit2, Trophy, ArrowUpRight } from 'lucide-react';
 import { PROJECTS, Project } from '../data/portfolioData';
 import { ProjectCard } from '../components/ProjectCard';
-import { Tilt3DCard } from '../components/Tilt3DCard';
+import { HolographicFoilCard } from '../components/HolographicFoilCard';
 
 interface ProjectsPageProps {
   onOpenCaseStudy: (project: Project) => void;
@@ -59,9 +59,9 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onOpenCaseStudy }) =
           </div>
         </div>
 
-        {/* Featured Case Study Hero Banner: AGRIMISTRO with 3D Tilt */}
+        {/* Featured Case Study Hero Banner: AGRIMISTRO with Cyber Holographic Foil */}
         {selectedCategory === 'All' && (
-          <Tilt3DCard maxTilt={5} className="w-full mb-6 sm:mb-10">
+          <HolographicFoilCard foilType="cyber" maxTilt={6} className="w-full mb-6 sm:mb-10">
             <div className="rounded-2xl p-4 sm:p-8 bg-gradient-to-br from-slate-900 via-slate-900/90 to-emerald-950/40 border border-emerald-500/40 shadow-2xl relative overflow-hidden group">
               
               {/* Glow decoration */}
@@ -70,7 +70,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onOpenCaseStudy }) =
               <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8 items-center">
                 <div className="lg:col-span-8 space-y-3">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[10px] sm:text-xs font-bold flex items-center gap-1.5">
+                    <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[10px] sm:text-xs font-bold flex items-center gap-1.5 shadow-md">
                       <Trophy className="w-3.5 h-3.5 text-amber-400 shrink-0" />
                       1st Prize — AI & Generative AI (₹50k Award)
                     </span>
@@ -112,7 +112,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onOpenCaseStudy }) =
                 </div>
               </div>
             </div>
-          </Tilt3DCard>
+          </HolographicFoilCard>
         )}
 
         {/* Project Cards Grid */}
