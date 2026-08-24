@@ -1,0 +1,41 @@
+{
+  "name": "Bharathi E | Full Stack & AI Engineer Portfolio",
+  "short_name": "Bharathi Portfolio",
+  "description": "Progressive Web App Portfolio of Bharathi E - Full Stack Python Developer, AI/ML & Voice AI Engineer, MCA @ SRM IST",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B0F19",
+  "theme_color": "#0284C7",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["portfolio", "technology", "developer", "productivity"],
+  "shortcuts": [
+    {
+      "name": "Projects",
+      "url": "/#projects",
+      "description": "View case studies including AGRIMISTRO and ULAVI VOCIS"
+    },
+    {
+      "name": "Experience",
+      "url": "/#experience",
+      "description": "View 4 industry internships & technical achievements"
+    },
+    {
+      "name": "DSA Profile",
+      "url": "/#dsa",
+      "description": "Explore 100 solved LeetCode problems & algorithmic patterns"
+    },
+    {
+      "name": "AI Assistant",
+      "url": "/#assistant",
+      "description": "Ask questions to the grounded portfolio AI"
+    }
+  ]
+}
