@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Sparkles, Code2, Server, Layout, Bot, Database } from 'lucide-react';
 import { SKILLS_DATA } from '../data/portfolioData';
 import { DsaVisualizer } from '../components/DsaVisualizer';
-import { Tilt3DCard } from '../components/Tilt3DCard';
 
 export const SkillsDsaPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'languages' | 'backend' | 'frontend' | 'ai' | 'devops'>('languages');
@@ -26,11 +25,7 @@ export const SkillsDsaPage: React.FC = () => {
   };
 
   return (
-    <section id="skills" className="py-12 sm:py-20 relative">
-      
-      {/* Glow */}
-      <div className="glow-orb glow-orb-violet w-[260px] sm:w-[400px] h-[260px] sm:h-[400px] top-10 left-10" />
-
+    <section id="skills" className="py-12 sm:py-20 relative ambient-glow-violet">
       <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
@@ -60,9 +55,9 @@ export const SkillsDsaPage: React.FC = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 sm:gap-2 whitespace-nowrap transition-all shrink-0 ${
+                  className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 sm:gap-2 whitespace-nowrap transition-colors shrink-0 ${
                     isActive
-                      ? 'bg-violet-600 text-white shadow-lg shadow-violet-600/30'
+                      ? 'bg-violet-600 text-white shadow-md'
                       : 'bg-slate-950/60 border border-white/5 text-slate-400 hover:text-white hover:bg-slate-900'
                   }`}
                 >
@@ -73,42 +68,43 @@ export const SkillsDsaPage: React.FC = () => {
             })}
           </div>
 
-          {/* Skill Grid with 3D Depth */}
+          {/* Skill Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
             {getActiveSkills().map((skill: any, idx: number) => (
-              <Tilt3DCard key={idx} maxTilt={4} className="w-full">
-                <div className="p-3.5 sm:p-4 rounded-xl bg-slate-950/70 border border-white/5 hover:border-violet-500/40 transition-all flex flex-col justify-between group h-full">
-                  <div>
-                    <div className="flex items-center justify-between gap-2 mb-2">
-                      <div className="flex flex-wrap items-center gap-1.5 min-w-0">
-                        <span className="font-bold text-xs sm:text-sm text-white group-hover:text-violet-300 transition-colors truncate">
-                          {skill.name}
-                        </span>
-                        {skill.tag && (
-                          <span className="px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 text-[9px] sm:text-[10px] font-mono font-semibold shrink-0">
-                            {skill.tag}
-                          </span>
-                        )}
-                      </div>
-                      <span className="text-xs font-mono font-bold text-slate-400 shrink-0">
-                        {skill.level}%
+              <div
+                key={idx}
+                className="p-3.5 sm:p-4 rounded-xl bg-slate-950/70 border border-white/5 hover:border-violet-500/40 transition-colors flex flex-col justify-between group h-full"
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <div className="flex flex-wrap items-center gap-1.5 min-w-0">
+                      <span className="font-bold text-xs sm:text-sm text-white group-hover:text-violet-300 transition-colors truncate">
+                        {skill.name}
                       </span>
+                      {skill.tag && (
+                        <span className="px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 text-[9px] sm:text-[10px] font-mono font-semibold shrink-0">
+                          {skill.tag}
+                        </span>
+                      )}
                     </div>
-
-                    {/* Skill Progress Meter with 3D Glow */}
-                    <div className="w-full h-2 bg-slate-900 rounded-full overflow-hidden mb-2.5 p-0.5 border border-white/5">
-                      <div
-                        className="h-full bg-gradient-to-r from-violet-500 via-cyan-400 to-emerald-400 rounded-full transition-all duration-500 shadow-sm shadow-cyan-400/50"
-                        style={{ width: `${skill.level}%` }}
-                      />
-                    </div>
-
-                    <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
-                      {skill.desc}
-                    </p>
+                    <span className="text-xs font-mono font-bold text-slate-400 shrink-0">
+                      {skill.level}%
+                    </span>
                   </div>
+
+                  {/* Skill Progress Meter */}
+                  <div className="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden mb-2.5">
+                    <div
+                      className="h-full bg-gradient-to-r from-violet-500 via-cyan-400 to-emerald-400 rounded-full transition-all duration-300"
+                      style={{ width: `${skill.level}%` }}
+                    />
+                  </div>
+
+                  <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
+                    {skill.desc}
+                  </p>
                 </div>
-              </Tilt3DCard>
+              </div>
             ))}
           </div>
 

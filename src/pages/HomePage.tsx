@@ -30,12 +30,8 @@ export const HomePage: React.FC<HomePageProps> = ({
   const [activeHeroView, setActiveHeroView] = useState<'talisman' | 'terminal'>('talisman');
 
   return (
-    <section id="home" className="relative pt-20 sm:pt-32 pb-10 sm:pb-20 overflow-hidden">
+    <section id="home" className="relative pt-20 sm:pt-32 pb-10 sm:pb-20 overflow-hidden ambient-glow-cyan ambient-glow-emerald">
       
-      {/* Dynamic Background Glows */}
-      <div className="glow-orb glow-orb-cyan w-[260px] sm:w-[500px] h-[260px] sm:h-[500px] -top-20 -left-20" />
-      <div className="glow-orb glow-orb-emerald w-[240px] sm:w-[450px] h-[240px] sm:h-[450px] top-64 -right-20" />
-
       <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 relative z-10">
         
         {/* Main Hero Grid */}
@@ -45,7 +41,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           <div className="lg:col-span-7 space-y-4 sm:space-y-6">
             
             {/* Top Academic Status Pill */}
-            <div className="inline-flex flex-wrap items-center gap-1.5 sm:gap-2 px-3 py-1.5 rounded-full bg-slate-900/90 border border-cyan-500/30 text-cyan-300 text-[10px] sm:text-xs font-mono backdrop-blur-md shadow-lg shadow-cyan-500/10">
+            <div className="inline-flex flex-wrap items-center gap-1.5 sm:gap-2 px-3 py-1.5 rounded-full bg-slate-900/90 border border-cyan-500/30 text-cyan-300 text-[10px] sm:text-xs font-mono shadow-md">
               <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping shrink-0" />
               <span>MCA @ SRM IST • 9.90 CGPA</span>
               <span className="text-slate-600 hidden sm:inline">|</span>
@@ -77,7 +73,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-3.5 pt-1">
               <button
                 onClick={() => onNavigateTo('projects')}
-                className="btn-primary py-3 px-5 text-xs sm:text-sm w-full sm:w-auto shadow-lg shadow-cyan-500/25"
+                className="btn-primary py-3 px-5 text-xs sm:text-sm w-full sm:w-auto shadow-md"
               >
                 <span>Explore Case Studies</span>
                 <ArrowRight className="w-4 h-4 shrink-0" />
@@ -133,12 +129,12 @@ export const HomePage: React.FC<HomePageProps> = ({
           <div className="lg:col-span-5 space-y-3">
             
             {/* View Mode Toggle Strip */}
-            <div className="flex items-center justify-between p-1 rounded-xl bg-slate-950/80 border border-white/10 text-xs">
+            <div className="flex items-center justify-between p-1 rounded-xl bg-slate-950/90 border border-white/10 text-xs">
               <button
                 onClick={() => setActiveHeroView('talisman')}
                 className={`flex-1 py-1.5 px-3 rounded-lg font-bold flex items-center justify-center gap-1.5 transition-all ${
                   activeHeroView === 'talisman'
-                    ? 'bg-gradient-to-r from-cyan-500 to-sky-500 text-slate-950 shadow-md shadow-cyan-500/20'
+                    ? 'bg-gradient-to-r from-cyan-500 to-sky-500 text-slate-950 shadow-md'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
@@ -150,7 +146,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 onClick={() => setActiveHeroView('terminal')}
                 className={`flex-1 py-1.5 px-3 rounded-lg font-bold flex items-center justify-center gap-1.5 transition-all ${
                   activeHeroView === 'terminal'
-                    ? 'bg-gradient-to-r from-violet-600 to-sky-600 text-white shadow-md shadow-violet-600/20'
+                    ? 'bg-gradient-to-r from-violet-600 to-sky-600 text-white shadow-md'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
@@ -178,8 +174,8 @@ export const HomePage: React.FC<HomePageProps> = ({
         {/* 4 Hero Stats Strip with 3D Tilt */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 mt-6 sm:mt-12">
           {PERSONAL_INFO.stats.map((stat, idx) => (
-            <Tilt3DCard key={idx} maxTilt={6} className="w-full">
-              <div className="glass-panel p-3.5 sm:p-5 relative overflow-hidden group h-full flex flex-col justify-between border-white/10 hover:border-cyan-500/50">
+            <Tilt3DCard key={idx} maxTilt={5} className="w-full">
+              <div className="glass-panel p-3.5 sm:p-5 relative overflow-hidden group h-full flex flex-col justify-between border-white/10 hover:border-cyan-500/40">
                 <div className="text-[10px] sm:text-[11px] font-mono text-slate-400 uppercase tracking-wider mb-1 truncate">
                   {stat.label}
                 </div>

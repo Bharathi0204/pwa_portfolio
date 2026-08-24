@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { InstallPromptModal } from './components/InstallPrompt';
 import { OfflineBadge } from './components/OfflineBadge';
 import { ArchitectureModal } from './components/ArchitectureModal';
 import { AiAssistant } from './components/AiAssistant';
-import { ThreeDimensionalCanvas } from './components/ThreeDimensionalCanvas';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { FloatingActionHub } from './components/FloatingActionHub';
 import { HomePage } from './pages/HomePage';
@@ -50,27 +49,30 @@ export const App: React.FC = () => {
     };
   }, []);
 
-  // Update active section on scroll with optimized observer/listener
+  // High-performance IntersectionObserver for active section (zero layout reflows on scroll)
   useEffect(() => {
-    const sections = ['home', 'experience', 'projects', 'skills', 'achievements', 'contact'];
+    const sectionIds = ['home', 'experience', 'projects', 'skills', 'achievements', 'contact'];
     
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + 220;
-      for (const sectionId of sections) {
-        const el = document.getElementById(sectionId);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            setActiveSection(sectionId);
-            break;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
           }
-        }
+        });
+      },
+      {
+        rootMargin: '-30% 0px -60% 0px',
+        threshold: 0
       }
-    };
+    );
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
   }, []);
 
   const handleTriggerNativeInstall = async () => {
@@ -85,7 +87,7 @@ export const App: React.FC = () => {
     }
   };
 
-  const handleNavigateTo = (sectionId: string) => {
+  const handleNavigateTo = useCallback((sectionId: string) => {
     setActiveSection(sectionId);
     const element = document.getElementById(sectionId);
     if (element) {
@@ -93,14 +95,11 @@ export const App: React.FC = () => {
       const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
-  };
+  }, []);
 
   return (
     <div className="min-h-screen bg-cyber-grid bg-[#0b0f19] text-slate-100 relative selection:bg-cyan-500 selection:text-white">
       
-      {/* 3D Particle Mesh Background */}
-      <ThreeDimensionalCanvas />
-
       {/* Offline Status Listener */}
       <OfflineBadge />
 
@@ -139,7 +138,7 @@ export const App: React.FC = () => {
       {/* Footer */}
       <Footer />
 
-      {/* Floating Action Hub: Coordinated AI Assistant & Back to Top (Zero Overlap) */}
+      {/* Floating Action Hub */}
       <FloatingActionHub
         onOpenAssistant={() => setAiAssistantOpen(true)}
       />

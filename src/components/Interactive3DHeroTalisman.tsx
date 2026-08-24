@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Sparkles, RotateCcw, Hand, Zap, Info } from 'lucide-react';
+import { Sparkles, RotateCcw, Hand } from 'lucide-react';
 
 interface Charm3D {
   id: string;
@@ -42,7 +42,25 @@ export const Interactive3DHeroTalisman: React.FC = () => {
     let animId: number;
     let width = 0;
     let height = 0;
+    let isVisible = true;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    // Pause physics calculations when scrolled out of view to ensure 0 scroll lag
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isVisible = entry.isIntersecting;
+          if (isVisible && !animId) {
+            animId = requestAnimationFrame(render);
+          }
+        });
+      },
+      { threshold: 0.05 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
 
     const resize = () => {
       if (!containerRef.current || !canvas) return;
@@ -68,7 +86,7 @@ export const Interactive3DHeroTalisman: React.FC = () => {
         vx: 0, vy: 0, vz: 0,
         rotX: 0, rotY: 0, rotZ: 0,
         vRotX: 0.01, vRotY: 0.015, vRotZ: 0,
-        size: 38,
+        size: 36,
         type: 'python'
       },
       {
@@ -82,7 +100,7 @@ export const Interactive3DHeroTalisman: React.FC = () => {
         vx: 0, vy: 0, vz: 0,
         rotX: 0.2, rotY: -0.3, rotZ: 0.1,
         vRotX: -0.012, vRotY: 0.018, vRotZ: 0,
-        size: 34,
+        size: 32,
         type: 'iot'
       },
       {
@@ -96,7 +114,7 @@ export const Interactive3DHeroTalisman: React.FC = () => {
         vx: 0, vy: 0, vz: 0,
         rotX: -0.1, rotY: 0.2, rotZ: 0,
         vRotX: 0.02, vRotY: -0.01, vRotZ: 0.005,
-        size: 36,
+        size: 34,
         type: 'voice'
       },
       {
@@ -110,7 +128,7 @@ export const Interactive3DHeroTalisman: React.FC = () => {
         vx: 0, vy: 0, vz: 0,
         rotX: 0.1, rotY: 0.1, rotZ: -0.2,
         vRotX: 0.015, vRotY: 0.015, vRotZ: -0.01,
-        size: 36,
+        size: 34,
         type: 'goldMedal'
       },
       {
@@ -124,7 +142,7 @@ export const Interactive3DHeroTalisman: React.FC = () => {
         vx: 0, vy: 0, vz: 0,
         rotX: -0.2, rotY: -0.1, rotZ: 0.3,
         vRotX: -0.01, vRotY: -0.015, vRotZ: 0.01,
-        size: 32,
+        size: 30,
         type: 'dsa'
       }
     ];
@@ -134,7 +152,6 @@ export const Interactive3DHeroTalisman: React.FC = () => {
       const centerY = height / 2;
       const radius = Math.min(width, height) * 0.32;
 
-      // Position charms in a floating 3D orbital cluster
       const angles = [0, (Math.PI * 2) / 5, ((Math.PI * 2) * 2) / 5, ((Math.PI * 2) * 3) / 5, ((Math.PI * 2) * 4) / 5];
 
       charms.forEach((c, idx) => {
@@ -154,7 +171,7 @@ export const Interactive3DHeroTalisman: React.FC = () => {
     resize();
     window.addEventListener('resize', resize);
 
-    // Mouse / Touch Interaction State
+    // Pointer Interaction State
     let draggedCharm: Charm3D | null = null;
     let dragOffsetX = 0;
     let dragOffsetY = 0;
@@ -169,8 +186,8 @@ export const Interactive3DHeroTalisman: React.FC = () => {
 
     const handleDeviceOrientation = (e: DeviceOrientationEvent) => {
       if (e.gamma !== null && e.beta !== null) {
-        gyroTiltX = (e.gamma / 45) * 25; // Left-to-right tilt
-        gyroTiltY = ((e.beta - 45) / 45) * 25; // Front-to-back tilt
+        gyroTiltX = (e.gamma / 45) * 20;
+        gyroTiltY = ((e.beta - 45) / 45) * 20;
       }
     };
 
@@ -200,7 +217,6 @@ export const Interactive3DHeroTalisman: React.FC = () => {
       lastPointerX = pos.x;
       lastPointerY = pos.y;
 
-      // Find top charm under pointer
       for (let i = charms.length - 1; i >= 0; i--) {
         const c = charms[i];
         const dx = pos.x - c.x;
@@ -234,7 +250,6 @@ export const Interactive3DHeroTalisman: React.FC = () => {
         draggedCharm.rotY += pointerVelocityX * 0.02;
         draggedCharm.rotX -= pointerVelocityY * 0.02;
       } else {
-        // Check hover
         let foundHover: Charm3D | null = null;
         for (let i = charms.length - 1; i >= 0; i--) {
           const c = charms[i];
@@ -269,48 +284,36 @@ export const Interactive3DHeroTalisman: React.FC = () => {
     window.addEventListener('touchmove', handlePointerMove, { passive: true });
     window.addEventListener('touchend', handlePointerUp);
 
-    // Render 3D Charms
+    // Render 3D Charms with Hooke's Law Physics
     const render = (time: number) => {
+      if (!isVisible) {
+        animId = 0 as any;
+        return;
+      }
+
       ctx.clearRect(0, 0, width, height);
 
       const centerX = width / 2;
       const centerY = height / 2;
 
-      // Draw cyber spring cords connecting charms to the center core
+      // Draw cyber spring cords
       ctx.lineWidth = 1.2;
       charms.forEach((c) => {
         ctx.strokeStyle = `rgba(56, 189, 248, 0.2)`;
-        ctx.setLineDash([4, 4]);
         ctx.beginPath();
         ctx.moveTo(centerX, centerY);
-        ctx.quadraticCurveTo(
-          (centerX + c.x) / 2 + Math.sin(time * 0.003 + c.anchorZ) * 10,
-          (centerY + c.y) / 2 + Math.cos(time * 0.003 + c.anchorZ) * 10,
-          c.x,
-          c.y
-        );
+        ctx.lineTo(c.x, c.y);
         ctx.stroke();
-        ctx.setLineDash([]);
       });
 
-      // Draw Center Hub (Bharathi Tech Singularity Core)
+      // Center Singularity Core
       ctx.save();
       ctx.translate(centerX, centerY);
-      const corePulse = Math.sin(time * 0.004) * 3;
-      const coreGrad = ctx.createRadialGradient(0, 0, 4, 0, 0, 24 + corePulse);
-      coreGrad.addColorStop(0, 'rgba(56, 189, 248, 0.9)');
-      coreGrad.addColorStop(0.5, 'rgba(2, 132, 199, 0.4)');
-      coreGrad.addColorStop(1, 'rgba(2, 132, 199, 0)');
-      ctx.fillStyle = coreGrad;
-      ctx.beginPath();
-      ctx.arc(0, 0, 26 + corePulse, 0, Math.PI * 2);
-      ctx.fill();
-
       ctx.fillStyle = '#0f172a';
       ctx.strokeStyle = 'rgba(56, 189, 248, 0.8)';
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.arc(0, 0, 12, 0, Math.PI * 2);
+      ctx.arc(0, 0, 11, 0, Math.PI * 2);
       ctx.fill();
       ctx.stroke();
 
@@ -321,18 +324,13 @@ export const Interactive3DHeroTalisman: React.FC = () => {
       ctx.fillText('BE', 0, 1);
       ctx.restore();
 
-      // Physics update and drawing for each charm
-      const springK = 0.05; // Spring tension stiffness
-      const damping = 0.84; // Spring damping resistance
+      const springK = 0.05;
+      const damping = 0.84;
 
-      // Sort by Z for proper 3D layering
-      const sorted = [...charms].sort((a, b) => a.z - b.z);
-
-      sorted.forEach((c) => {
+      charms.forEach((c) => {
         if (!c.isDragging) {
-          // Spring force towards anchor + gyro gravity
-          const targetX = c.anchorX + gyroTiltX + Math.sin(time * 0.002 + c.anchorZ) * 8;
-          const targetY = c.anchorY + gyroTiltY + Math.cos(time * 0.002 + c.anchorZ) * 8;
+          const targetX = c.anchorX + gyroTiltX + Math.sin(time * 0.002 + c.anchorZ) * 6;
+          const targetY = c.anchorY + gyroTiltY + Math.cos(time * 0.002 + c.anchorZ) * 6;
 
           const fx = (targetX - c.x) * springK;
           const fy = (targetY - c.y) * springK;
@@ -343,85 +341,49 @@ export const Interactive3DHeroTalisman: React.FC = () => {
           c.x += c.vx;
           c.y += c.vy;
 
-          // Rotation momentum
           c.rotX += c.vRotX;
           c.rotY += c.vRotY;
           c.rotZ += c.vRotZ;
         }
 
-        // Draw soft 3D ground drop shadow
-        const shadowY = height - 20;
-        const shadowScale = Math.max(0.2, 1 - (shadowY - c.y) / height);
-        ctx.save();
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
-        ctx.beginPath();
-        ctx.ellipse(c.x, shadowY - 5, c.size * 0.8 * shadowScale, c.size * 0.25 * shadowScale, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-
-        // Draw the 3D charm itself with physical lighting and 3D transforms
         ctx.save();
         ctx.translate(c.x, c.y);
 
-        // 3D perspective distortion using scaling and shearing
         const scaleX = Math.cos(c.rotY);
-        const scaleY = Math.cos(c.rotX);
-        const isHovered = hoveredCharm === c || c.isDragging;
 
-        // Hover / Drag Glow Aura
-        if (isHovered) {
-          ctx.shadowColor = c.color;
-          ctx.shadowBlur = 20;
-        }
-
-        // Draw custom 3D physical object based on type
         if (c.type === 'python') {
-          // 3D Beveled Python Shield
           ctx.save();
           ctx.scale(Math.max(0.6, Math.abs(scaleX)), 1);
 
-          // Outer Chrome Rim
-          const chromeGrad = ctx.createLinearGradient(-c.size, -c.size, c.size, c.size);
-          chromeGrad.addColorStop(0, '#ffffff');
-          chromeGrad.addColorStop(0.3, '#38bdf8');
-          chromeGrad.addColorStop(0.7, '#0369a1');
-          chromeGrad.addColorStop(1, '#082f49');
-
-          ctx.fillStyle = chromeGrad;
+          ctx.fillStyle = '#0f172a';
+          ctx.strokeStyle = '#38bdf8';
+          ctx.lineWidth = 2;
           ctx.beginPath();
-          ctx.roundRect(-c.size, -c.size, c.size * 2, c.size * 2, 14);
+          ctx.roundRect(-c.size, -c.size, c.size * 2, c.size * 2, 12);
           ctx.fill();
+          ctx.stroke();
 
-          // Inner Dark Inset
-          ctx.fillStyle = '#090d16';
-          ctx.beginPath();
-          ctx.roundRect(-c.size + 3, -c.size + 3, (c.size - 3) * 2, (c.size - 3) * 2, 11);
-          ctx.fill();
-
-          // Python Two-Tone Curves
           ctx.fillStyle = '#38bdf8';
           ctx.beginPath();
-          ctx.arc(-4, -4, 12, 0, Math.PI * 1.5);
+          ctx.arc(-4, -4, 10, 0, Math.PI * 1.5);
           ctx.lineTo(-4, 0);
           ctx.fill();
 
           ctx.fillStyle = '#f59e0b';
           ctx.beginPath();
-          ctx.arc(4, 4, 12, Math.PI * 0.5, Math.PI * 2);
+          ctx.arc(4, 4, 10, Math.PI * 0.5, Math.PI * 2);
           ctx.lineTo(4, 0);
           ctx.fill();
 
           ctx.fillStyle = '#ffffff';
-          ctx.font = 'bold 9px monospace';
+          ctx.font = 'bold 8px monospace';
           ctx.textAlign = 'center';
-          ctx.fillText('PY', 0, 15);
+          ctx.fillText('PY', 0, 14);
           ctx.restore();
         } else if (c.type === 'iot') {
-          // 3D ESP32 Microcontroller PCB
           ctx.save();
           ctx.scale(Math.max(0.6, Math.abs(scaleX)), 1);
 
-          // Emerald PCB base
           ctx.fillStyle = '#064e3b';
           ctx.strokeStyle = '#34d399';
           ctx.lineWidth = 1.5;
@@ -430,27 +392,9 @@ export const Interactive3DHeroTalisman: React.FC = () => {
           ctx.fill();
           ctx.stroke();
 
-          // Metallic Chip Core
           ctx.fillStyle = '#1e293b';
-          ctx.strokeStyle = '#10b981';
-          ctx.lineWidth = 1;
           ctx.beginPath();
           ctx.rect(-c.size * 0.5, -c.size * 0.45, c.size, c.size * 0.9);
-          ctx.fill();
-          ctx.stroke();
-
-          // Gold Pin Connectors
-          ctx.fillStyle = '#fbbf24';
-          for (let p = -c.size + 6; p <= c.size - 6; p += 6) {
-            ctx.fillRect(p, -c.size * 0.85 - 2, 3, 3);
-            ctx.fillRect(p, c.size * 0.85 - 1, 3, 3);
-          }
-
-          // Blinking Status LED
-          const ledPulse = Math.sin(time * 0.01) > 0;
-          ctx.fillStyle = ledPulse ? '#34d399' : '#047857';
-          ctx.beginPath();
-          ctx.arc(c.size * 0.6, -c.size * 0.45, 2.5, 0, Math.PI * 2);
           ctx.fill();
 
           ctx.fillStyle = '#a7f3d0';
@@ -459,63 +403,45 @@ export const Interactive3DHeroTalisman: React.FC = () => {
           ctx.fillText('ESP32', 0, 3);
           ctx.restore();
         } else if (c.type === 'voice') {
-          // 3D Voice AI Neural Sphere
           ctx.save();
-          const spherePulse = Math.sin(time * 0.008) * 4;
-          const sphereGrad = ctx.createRadialGradient(-6, -6, 2, 0, 0, c.size + spherePulse);
-          sphereGrad.addColorStop(0, '#f3e8ff');
-          sphereGrad.addColorStop(0.4, '#c084fc');
-          sphereGrad.addColorStop(0.8, '#7e22ce');
-          sphereGrad.addColorStop(1, '#3b0764');
-
-          ctx.fillStyle = sphereGrad;
+          ctx.fillStyle = '#581c87';
+          ctx.strokeStyle = '#c084fc';
+          ctx.lineWidth = 2;
           ctx.beginPath();
-          ctx.arc(0, 0, c.size + spherePulse * 0.5, 0, Math.PI * 2);
+          ctx.arc(0, 0, c.size, 0, Math.PI * 2);
           ctx.fill();
+          ctx.stroke();
 
-          // Oscillating Voice Waveform Rings
-          ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+          ctx.strokeStyle = '#f3e8ff';
           ctx.lineWidth = 1.5;
           ctx.beginPath();
-          for (let i = -14; i <= 14; i += 4) {
-            const h = Math.sin(time * 0.01 + i * 0.4) * 8;
+          for (let i = -12; i <= 12; i += 4) {
+            const h = Math.sin(time * 0.01 + i * 0.4) * 7;
             ctx.moveTo(i, -h);
             ctx.lineTo(i, h);
           }
           ctx.stroke();
           ctx.restore();
         } else if (c.type === 'goldMedal') {
-          // 3D SRM ₹50,000 1st Prize Gold Medallion
           ctx.save();
           ctx.scale(Math.max(0.6, Math.abs(scaleX)), 1);
 
-          // Specular Gold Ring
-          const goldGrad = ctx.createLinearGradient(-c.size, -c.size, c.size, c.size);
-          goldGrad.addColorStop(0, '#fef08a');
-          goldGrad.addColorStop(0.3, '#f59e0b');
-          goldGrad.addColorStop(0.7, '#d97706');
-          goldGrad.addColorStop(1, '#78350f');
-
-          ctx.fillStyle = goldGrad;
+          ctx.fillStyle = '#78350f';
+          ctx.strokeStyle = '#fbbf24';
+          ctx.lineWidth = 2.5;
           ctx.beginPath();
           ctx.arc(0, 0, c.size, 0, Math.PI * 2);
           ctx.fill();
-
-          // Inner Dark Medallion Face
-          ctx.fillStyle = '#0f172a';
-          ctx.beginPath();
-          ctx.arc(0, 0, c.size - 4, 0, Math.PI * 2);
-          ctx.fill();
+          ctx.stroke();
 
           ctx.fillStyle = '#fbbf24';
-          ctx.font = 'black 11px sans-serif';
+          ctx.font = 'black 10px sans-serif';
           ctx.textAlign = 'center';
           ctx.fillText('1ST', 0, -2);
           ctx.font = 'bold 7px monospace';
           ctx.fillText('₹50K', 0, 9);
           ctx.restore();
         } else if (c.type === 'dsa') {
-          // 3D LeetCode 100 Algorithmic Prism
           ctx.save();
           ctx.scale(Math.max(0.6, Math.abs(scaleX)), 1);
 
@@ -523,7 +449,6 @@ export const Interactive3DHeroTalisman: React.FC = () => {
           ctx.strokeStyle = '#06b6d4';
           ctx.lineWidth = 2;
 
-          // Diamond Polygon
           ctx.beginPath();
           ctx.moveTo(0, -c.size);
           ctx.lineTo(c.size * 0.9, 0);
@@ -533,16 +458,6 @@ export const Interactive3DHeroTalisman: React.FC = () => {
           ctx.fill();
           ctx.stroke();
 
-          // Facet Highlights
-          ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(0, -c.size);
-          ctx.lineTo(0, c.size);
-          ctx.moveTo(-c.size * 0.9, 0);
-          ctx.lineTo(c.size * 0.9, 0);
-          ctx.stroke();
-
           ctx.fillStyle = '#e0f2fe';
           ctx.font = 'bold 10px monospace';
           ctx.textAlign = 'center';
@@ -550,11 +465,10 @@ export const Interactive3DHeroTalisman: React.FC = () => {
           ctx.restore();
         }
 
-        // Micro Name Label beneath charm
-        ctx.fillStyle = isHovered ? '#38bdf8' : '#94a3b8';
+        ctx.fillStyle = hoveredCharm === c ? '#38bdf8' : '#94a3b8';
         ctx.font = 'bold 9px monospace';
         ctx.textAlign = 'center';
-        ctx.fillText(c.name.split(' ')[0], 0, c.size + 14);
+        ctx.fillText(c.name.split(' ')[0], 0, c.size + 13);
 
         ctx.restore();
       });
@@ -565,6 +479,7 @@ export const Interactive3DHeroTalisman: React.FC = () => {
     animId = requestAnimationFrame(render);
 
     return () => {
+      observer.disconnect();
       window.removeEventListener('resize', resize);
       window.removeEventListener('deviceorientation', handleDeviceOrientation);
       canvas.removeEventListener('mousedown', handlePointerDown);
@@ -584,24 +499,24 @@ export const Interactive3DHeroTalisman: React.FC = () => {
   return (
     <div 
       ref={containerRef}
-      className="relative w-full h-[280px] sm:h-[340px] rounded-2xl bg-gradient-to-b from-slate-950/80 to-slate-900/60 border border-cyan-500/30 backdrop-blur-xl shadow-2xl shadow-cyan-500/10 overflow-hidden group select-none"
+      className="relative w-full h-[280px] sm:h-[340px] rounded-2xl bg-slate-950/90 border border-cyan-500/30 shadow-xl overflow-hidden group select-none"
     >
       {/* Top Interactive HUD Bar */}
       <div className="absolute top-2.5 left-3 right-3 z-10 flex items-center justify-between pointer-events-none">
-        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/90 border border-cyan-500/30 text-cyan-300 text-[10px] font-mono shadow-md backdrop-blur-md">
+        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/90 border border-cyan-500/30 text-cyan-300 text-[10px] font-mono shadow-md">
           <Sparkles className="w-3 h-3 text-cyan-400 animate-pulse" />
           <span className="font-bold">3D Physical Talismans</span>
         </div>
 
         <div className="flex items-center gap-1.5 pointer-events-auto">
           {!hasInteracted && (
-            <span className="hidden xs:inline text-[9px] font-mono text-slate-400 bg-slate-950/80 px-2 py-0.5 rounded border border-white/5 animate-pulse">
+            <span className="hidden xs:inline text-[9px] font-mono text-slate-400 bg-slate-950/80 px-2 py-0.5 rounded border border-white/5">
               Drag & fling charms 👆
             </span>
           )}
           <button
             onClick={handleResetPhysics}
-            className="p-1.5 rounded-lg bg-slate-900/90 border border-white/10 hover:border-cyan-400 text-slate-300 hover:text-cyan-300 text-[10px] transition-all flex items-center gap-1"
+            className="p-1.5 rounded-lg bg-slate-900/90 border border-white/10 hover:border-cyan-400 text-slate-300 hover:text-cyan-300 text-[10px] transition-colors flex items-center gap-1"
             title="Reset Spring Physics"
           >
             <RotateCcw className="w-3 h-3" />
@@ -617,15 +532,15 @@ export const Interactive3DHeroTalisman: React.FC = () => {
 
       {/* Dynamic Active Charm Info Strip */}
       <div className="absolute bottom-2 left-3 right-3 z-10 pointer-events-none">
-        <div className="px-3 py-1.5 rounded-xl bg-slate-950/90 border border-white/10 text-[10px] sm:text-[11px] font-mono text-slate-300 flex items-center justify-between gap-2 shadow-lg backdrop-blur-md">
+        <div className="px-3 py-1.5 rounded-xl bg-slate-950/95 border border-white/10 text-[10px] sm:text-[11px] font-mono text-slate-300 flex items-center justify-between gap-2 shadow-md">
           <div className="flex items-center gap-1.5 truncate">
             <Hand className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
             <span className="text-cyan-300 font-bold truncate">
-              {activeCharmInfo || 'Grab & fling any 3D charm to explore superpowers'}
+              {activeCharmInfo || 'Grab & fling any 3D charm'}
             </span>
           </div>
           <span className="text-[9px] text-emerald-400 font-bold shrink-0 hidden xs:inline">
-            60 FPS Physics
+            60 FPS
           </span>
         </div>
       </div>

@@ -9,8 +9,7 @@ import {
   Mail, 
   Bot, 
   CheckCircle2,
-  Share2,
-  Cpu
+  Share2
 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 
@@ -35,8 +34,16 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [copiedLink, setCopiedLink] = useState(false);
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 15);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const scrolled = window.scrollY > 20;
+          setIsScrolled((prev) => (prev !== scrolled ? scrolled : prev));
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -81,10 +88,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-200 ${
         isScrolled 
-          ? 'bg-slate-950/92 backdrop-blur-xl border-b border-white/10 shadow-2xl py-2 sm:py-3' 
-          : 'bg-slate-950/50 backdrop-blur-md border-b border-white/5 py-2.5 sm:py-4'
+          ? 'bg-slate-950/95 border-b border-white/10 shadow-xl py-2 sm:py-2.5' 
+          : 'bg-slate-950/40 border-b border-white/5 py-2.5 sm:py-3.5'
       }`}
     >
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-2">
@@ -94,7 +101,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           onClick={() => handleNavClick('home')}
           className="flex items-center gap-2.5 group text-left focus:outline-none shrink-0"
         >
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-cyan-500 via-sky-600 to-emerald-500 p-0.5 shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform duration-200 shrink-0">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-cyan-500 via-sky-600 to-emerald-500 p-0.5 shadow-md shadow-cyan-500/20 shrink-0">
             <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center font-heading font-black text-cyan-400 text-xs sm:text-base tracking-wider">
               BE
             </div>
@@ -116,7 +123,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </button>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-1 bg-slate-900/70 p-1.5 rounded-xl border border-white/10 backdrop-blur-md">
+        <nav className="hidden lg:flex items-center gap-1 bg-slate-900/80 p-1.5 rounded-xl border border-white/10">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeSection === item.id;
@@ -124,9 +131,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 key={item.id}
                 onClick={() => handleNavClick(item.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all duration-200 ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
                   isActive
-                    ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm'
+                    ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
                     : 'text-slate-400 hover:text-white hover:bg-white/5'
                 }`}
               >
@@ -143,7 +150,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* AI Assistant Quick Trigger */}
           <button
             onClick={onOpenAssistant}
-            className="flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 rounded-lg bg-violet-950/60 border border-violet-500/40 hover:border-violet-400 text-violet-300 text-[11px] sm:text-xs font-semibold shadow-sm hover:scale-[1.02] active:scale-95 transition-all"
+            className="flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 rounded-lg bg-violet-950/60 border border-violet-500/40 hover:border-violet-400 text-violet-300 text-[11px] sm:text-xs font-semibold transition-colors"
             title="Ask Grounded Portfolio AI"
           >
             <Bot className="w-3.5 h-3.5 text-violet-400 shrink-0 animate-pulse" />
@@ -159,7 +166,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           ) : (
             <button
               onClick={onInstallClick}
-              className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 text-slate-950 font-bold text-[11px] sm:text-xs shadow-md shadow-cyan-500/25 hover:scale-[1.02] active:scale-95 transition-all"
+              className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 text-slate-950 font-bold text-[11px] sm:text-xs shadow-md shadow-cyan-500/25 transition-all"
               title="Install PWA to Device"
             >
               <Download className="w-3.5 h-3.5 text-slate-950 shrink-0" />

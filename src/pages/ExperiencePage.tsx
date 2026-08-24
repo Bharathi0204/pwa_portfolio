@@ -1,5 +1,5 @@
 import React from 'react';
-import { Briefcase, ArrowRight, CheckCircle2, Award, Sparkles } from 'lucide-react';
+import { Briefcase, ArrowRight, Sparkles } from 'lucide-react';
 import { EXPERIENCES } from '../data/portfolioData';
 import { TimelineItem } from '../components/TimelineItem';
 
@@ -13,11 +13,7 @@ export const ExperiencePage: React.FC = () => {
   ];
 
   return (
-    <section id="experience" className="py-12 sm:py-20 relative">
-      
-      {/* Background glow */}
-      <div className="glow-orb glow-orb-cyan w-[260px] sm:w-[400px] h-[260px] sm:h-[400px] top-20 -left-20" />
-
+    <section id="experience" className="py-12 sm:py-20 relative ambient-glow-cyan">
       <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
